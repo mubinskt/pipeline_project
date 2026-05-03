@@ -270,3 +270,31 @@ std::stack<T*>    ✅
 
 std::vector<T>    ❌
 RULE: Containers store references to pooled objects, not the objects themselves.
+
+
+
+
+B) Free-list (lock-free stack)
+Maintain a stack of free indices.
+Each slot/node stores:
+
+next index (uint32_t) to the next free slot
+
+Pool maintains an atomic head:
+
+head contains the current free index (and ideally a tag/counter to reduce ABA)
+
+Acquire:
+
+read head
+if invalid → exhausted → nullptr
+CAS head to next
+return pointer to slot
+
+Release:
+
+compute index from pointer
+push index to head via CAS loop
+
+
+ABA: For today, we’ll do the “good enough” version (tagged head) if possible. If you want simpler first, we can do untagged, and improve in Hour 2.5.

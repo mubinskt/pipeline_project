@@ -1,8 +1,13 @@
 #pragma once
 
 #include<cstddef>
+#include<cstdint>
+#include<mutex>
+#include<new>
 #include "item.h"
 #include <stack>
+#include <utility>
+#include <vector>
 
 template<typename T>
 class Memory_Pool
